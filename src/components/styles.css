@@ -13,3 +13,8 @@
   cursor: pointer;
   margin-left: 10px;
 }
+
+.editInput:focus {
+  outline: none;
+  width: 30vw;
+}

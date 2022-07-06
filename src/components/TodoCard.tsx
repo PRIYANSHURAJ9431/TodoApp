@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './styles.css'
 import { Todo } from '../model';
 
@@ -11,7 +11,13 @@ interface Props {
 
 const TodoCard = ({ todo, todos, setTodos }: Props) => {
 
+    const [edit, setEdit] = useState<boolean>(false);
+    const [todoedit, setTodoedit] = useState<string>(todo.todo);
+
+    const inputRef = useRef<HTMLInputElement>(null);
+
     const handleDone = (id: number) => {
+        setEdit(false)
         setTodos(todos.map((todo) => {
             return todo.id === id ? { ...todo, isDone: !todo.isDone } : todo
         }))
@@ -23,11 +29,40 @@ const TodoCard = ({ todo, todos, setTodos }: Props) => {
         }))
     };
 
-    return (
-        <form className='todoCard'>
-            {!todo.isDone ? <span>{todo.todo}</span> : <s>{todo.todo}</s>}
+    const handleEdit = (e: React.FormEvent, id: number) => {
+        e.preventDefault();
+        setTodos(todos.map((todo) => {
+            return todo.id === id ? { ...todo, todo: todoedit } : todo
+        }))
+        setEdit(!edit);
+    }
 
-            <span className='cardIcon'>&#9998;</span>
+    useEffect(() => {
+        inputRef.current?.focus()
+    }, [edit])
+
+    return (
+        <form className='todoCard' onSubmit={(e) => {
+            handleEdit(e, todo.id);
+        }}>
+
+            {!edit ?
+                (!todo.isDone ? <span>{todo.todo}</span> : <s>{todo.todo}</s>) : (
+                    <input
+                        className='editInput'
+                        ref={inputRef}
+                        value={todoedit} onChange={(e) => {
+                            setTodoedit(e.target.value)
+                        }}></input>
+                )}
+
+            <span className='cardIcon'
+                onClick={() => {
+                    if (!edit && !todo.isDone) {
+                        setEdit(!edit);
+                        console.log("handle edit")
+                    }
+                }}>&#9998;</span>
 
             <span className='cardIcon'
                 onClick={() => {
