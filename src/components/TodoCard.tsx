@@ -26,7 +26,8 @@ const TodoCard = ({ todo, todos, setTodos }: Props) => {
     return (
         <form className='todoCard'>
             {!todo.isDone ? <span>{todo.todo}</span> : <s>{todo.todo}</s>}
-
+            
+            {/* Add edit functionality -- remote */}
             <span className='cardIcon'>&#9998;</span>
 
             <span className='cardIcon'
